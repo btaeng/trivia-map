@@ -1,13 +1,21 @@
 import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from 'react-leaflet';
 import { useState, useRef, useEffect } from 'react';
 
-const geoJsonFiles = import.meta.glob('./assets/*.json', { eager: true });
+import allCountries from './assets/countries.json';
 
-const geoJsonList = Object.values(geoJsonFiles).map(data => {
-  const feature = data.features?.[0];
-  const countryName = feature?.properties?.NAME || "Unknown location";
-  return { name: countryName, data };
+const geoJsonList = allCountries.features.map(feature => {
+  const props = feature.properties || {};
+  return {
+    name: props.NAME || "Unknown",
+    subregion: props.SUBREGION || "Unknown",
+    data: {
+      type: "FeatureCollection",
+      features: [feature]
+    }
+  };
 });
+
+const regions = [...new Set(geoJsonList.map(c => c.subregion))];
 
 // Function to fetch trivia question from the server
 async function getTrivia(locationName, category) {
@@ -40,10 +48,14 @@ export default function MapView() {
     answerIndex: null
   });
   const [feedback, setFeedback] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState(null);
   const categoryRef = useRef(category);
   useEffect(() => {
     categoryRef.current = category;
   }, [category]);
+  const visibleCountries = selectedRegion
+  ? geoJsonList.filter(c => c.subregion === selectedRegion)
+  : [];
   // Render the map and UI
   return (
     <MapContainer center={[0, 0]} zoom={2} style={{ height: '100vh', width: '100vw' }}>
@@ -51,8 +63,43 @@ export default function MapView() {
         attribution='© OpenStreetMap contributors'
         url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
       />
+      {!selectedRegion && (
+        <div style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(0,0,0,0.8)",
+          zIndex: 2000,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "white"
+        }}>
+          <h2>Select a Region</h2>
+          <select
+            style={{
+              padding: '10px 20px',
+              fontSize: '1.2rem',
+              backgroundColor: '#333',
+              color: 'white',
+              border: '1px solid #555',
+              borderRadius: '6px'
+            }}
+            defaultValue=""
+            onChange={e => setSelectedRegion(e.target.value)}
+          >
+            <option value="" disabled>Choose a region</option>
+            {regions.map(r => (
+              <option key={r} value={r}>{r}</option>
+            ))}
+          </select>
+        </div>
+      )}
       <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 1000 }}>
-        {['history', 'geography', 'entertainment', 'cuisine', 'culture'].map(cat => (
+        {['history', 'geography', 'government/politics', 'economy', 'culture', 'cuisine'].map(cat => (
           <button
             key={cat}
             onClick={() => setCategory(cat)}
@@ -68,7 +115,44 @@ export default function MapView() {
           </button>
         ))}
       </div>
-      {geoJsonList.map(({ name, data }) => (
+      <div style={{
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 1000,
+        backgroundColor: '#222',
+        padding: '8px',
+        borderRadius: '6px'
+      }}>
+        <label style={{ color: 'white', marginRight: '8px' }}>
+          Region:
+        </label>
+        <select
+          style={{
+            padding: '4px 8px',
+            backgroundColor: '#333',
+            color: 'white',
+            border: '1px solid #555',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+          value={selectedRegion || ""}
+          onChange={e => {
+            const region = e.target.value;
+            setSelectedRegion(region);
+            setMarker(null);
+            setTrivia({});
+          }}
+        >
+          <option value="" disabled>Select region</option>
+          {regions.map(r => (
+            <option key={r} value={r}>
+              {r}
+            </option>
+          ))}
+        </select>
+      </div>
+      {visibleCountries.map(({ name, data }) => (
         <GeoJSON
           key={name}
           data={data}
