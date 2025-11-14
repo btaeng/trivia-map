@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, GeoJSON, Marker, Popup } from 'react-leaflet';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const geoJsonFiles = import.meta.glob('./assets/*.json', { eager: true });
 
@@ -40,6 +40,10 @@ export default function MapView() {
     answerIndex: null
   });
   const [feedback, setFeedback] = useState('');
+  const categoryRef = useRef(category);
+  useEffect(() => {
+    categoryRef.current = category;
+  }, [category]);
   // Render the map and UI
   return (
     <MapContainer center={[0, 0]} zoom={2} style={{ height: '100vh', width: '100vw' }}>
@@ -74,7 +78,7 @@ export default function MapView() {
               mouseover: e => e.target.setStyle({ color: '#ff7800', weight: 3 }),
               mouseout: e => e.target.setStyle({ color: '#3388ff', weight: 2 }),
               click: async e => {
-                const trivia = await getTrivia(name, category);
+                const trivia = await getTrivia(name, categoryRef.current);
                 setMarker(e.latlng);
                 setTrivia(trivia);
                 setFeedback('');
