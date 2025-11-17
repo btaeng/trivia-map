@@ -1,8 +1,8 @@
 import express from 'express';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 import { GoogleGenAI } from '@google/genai';
 
-dotenv.config();
+// dotenv.config();
 const app = express();
 app.use(express.json());
 
