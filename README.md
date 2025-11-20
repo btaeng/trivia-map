@@ -119,6 +119,15 @@ Replace that whole section with this instead:
 
 ---
 
+## Disclaimer
+
+This project uses country boundary data from [Natural Earth](https://www.naturalearthdata.com/downloads/50m-cultural-vectors/).
+All geographic borders and territorial outlines shown in this application are based solely on that dataset.
+They do not represent or imply any political stance, endorsement, or recognition of territorial claims or disputes.
+The author of this project is not affiliated with or responsible for any interpretations derived from the displayed map data.
+
+---
+
 ## License
 
 MIT License. See [LICENSE](LICENSE) for details.
