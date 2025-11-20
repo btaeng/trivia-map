@@ -20,7 +20,7 @@ Questions are powered by the **Google Gemini API** and grouped by category (hist
 
 * Node.js 18+
 * npm or yarn
-* Google Gemini API key (through `@google/genai`)
+* Google Gemini API key (through `@google/genai`), get one for free [here](https://aistudio.google.com/app/apikey)
 * Modern web browser (for Vite dev environment)
 
 ---
