@@ -93,6 +93,22 @@ Replace that whole section with this instead:
    http://localhost:5173
    ```
 
+7. **If you are using Docker, do this instead**
+
+   In your terminal, run these commands:
+
+   ```bash
+   docker build -t trivia-map .
+   docker run -p 3001:3001 -e GEMINI_API_KEY=$GEMINI_API_KEY trivia-map # macOS/Linux
+   docker run -p 3001:3001 -e GEMINI_API_KEY=$env:GEMINI_API_KEY trivia-map # Windows
+   ```
+
+   And then in your browser, go to:
+
+   ```
+   http://localhost:3001/
+   ```
+
 ---
 
 ## Usage
