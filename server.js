@@ -1,12 +1,18 @@
+/* eslint-disable no-undef */
 import express from 'express';
-// import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { GoogleGenAI } from '@google/genai';
 
-// dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 app.use(express.json());
 
-const ai = new GoogleGenAI({});
+app.use(express.static(path.join(__dirname, 'dist')));
+
+const ai = new GoogleGenAI(process.env.GEMINI_API_KEY);
 const triviaCache = new Map();
 
 app.post('/api/trivia', async (req, res) => {
@@ -65,4 +71,13 @@ Respond ONLY in JSON with keys:
   }
 });
 
-app.listen(3001, () => console.log('Server running on http://localhost:3001'));
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
+const PORT = process.env.PORT || 3001;
+const HOST = '0.0.0.0';
+
+app.listen(PORT, HOST, () => {
+  console.log(`Server running on http://${HOST}:${PORT}`);
+});

@@ -1,0 +1,6 @@
+node_modules
+npm-debug.log
+dist
+.git
+.env
+ne_50m_admin_0_countries.zip
