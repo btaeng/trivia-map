@@ -40,10 +40,6 @@ Questions are powered by the **Google Gemini API** and grouped by category (hist
    npm install
    ```
 
-Replace that whole section with this instead:
-
----
-
 3. **Set your Gemini API key as a system environment variable**
 
    **Windows (PowerShell):**
