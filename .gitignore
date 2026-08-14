@@ -137,3 +137,15 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# local env files
+.env
+.env.local
+
+# Personal notes
+interview.txt
+
+# Unnecessary files
+ne_50m_admin_0_countries/
+ne_50m_admin_0_countries.zip
+eslint.config.js
