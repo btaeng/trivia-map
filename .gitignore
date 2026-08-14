@@ -146,6 +146,7 @@ vite.config.ts.timestamp-*
 interview.txt
 
 # Unnecessary files
+public/
 ne_50m_admin_0_countries/
 ne_50m_admin_0_countries.zip
 eslint.config.js
