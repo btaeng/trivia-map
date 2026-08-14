@@ -34,7 +34,11 @@ async function getTrivia(locationName, category) {
     };
   } catch (err) {
     console.error('Error fetching trivia:', err);
-    return { question: 'Error fetching trivia.', answer: null };
+    return { 
+      question: 'Error fetching trivia.', 
+      choices: [], 
+      answerIndex: null 
+    };
   }
 }
 
